@@ -1,0 +1,20 @@
+.App {
+  font-size: calc(10px + 2vw);
+}
+
+.App-Header {
+  font-size: calc(20px + 1vw);
+  padding: 2vh 2vw;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.App-Header .Logo {
+  font-weight: bold;
+}
+
+.App-Header .semi-icon-default {
+  font-size: calc(20px + 1vw);
+}
+

@@ -18,7 +18,7 @@ export default class Main {
     }
 
     private static onReady() {
-        Main.mainWindow = new Main.BrowserWindow({width: 800, height: 600, webPreferences: {preload: path.join(__dirname, "preload.js")}});
+        Main.mainWindow = new Main.BrowserWindow({webPreferences: {preload: path.join(__dirname, "preload.js")}});
         if (electronIsDev) {
             Main.mainWindow.loadURL("http://localhost:3000").catch()
         } else {
