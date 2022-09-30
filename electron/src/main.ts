@@ -18,7 +18,19 @@ export default class Main {
     }
 
     private static onReady() {
-        Main.mainWindow = new Main.BrowserWindow({webPreferences: {preload: path.join(__dirname, "preload.js")}});
+        Main.mainWindow = new Main.BrowserWindow({
+            backgroundColor: "#F9F9F9",
+            width: 900,
+            height: 600,
+            minimizable: false,
+            maximizable: false,
+            resizable: false,
+            fullscreen: false,
+            fullscreenable: false,
+            skipTaskbar: true,
+            title: "CLASH-EX",
+            webPreferences: {preload: path.join(__dirname, "preload.js")}
+        });
         if (electronIsDev) {
             Main.mainWindow.loadURL("http://localhost:3000").catch()
         } else {

@@ -1,0 +1,13 @@
+.App-Pane-Setting {
+    padding: 0 2vw;
+}
+
+.App-Pane-Setting .Header-Content {
+    display: flex;
+    justify-content: space-between;
+}
+
+.App-Pane-Setting .Header-Item {
+    display: flex;
+    align-items: center;
+}

@@ -1,6 +1,7 @@
 import React from 'react';
 import '../static/css/App.css';
 import {TabPane, Tabs} from "@douyinfe/semi-ui";
+import Setting from "./pane/Setting";
 
 function App() {
   return (
@@ -12,7 +13,7 @@ function App() {
           <TabPane itemKey="rule" tab="规则">111</TabPane>
           <TabPane itemKey="proxy" tab="代理">123</TabPane>
           <TabPane itemKey="connection" tab="连接">111</TabPane>
-          <TabPane itemKey="setting" tab="设置">222</TabPane>
+          <TabPane itemKey="setting" tab="设置"><Setting/></TabPane>
         </Tabs>
       </div>
     </div>
