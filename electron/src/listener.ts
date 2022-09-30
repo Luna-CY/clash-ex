@@ -1,23 +1,23 @@
 import IpcMainInvokeEvent = Electron.IpcMainInvokeEvent;
-import Clash from "./clash";
+import Clash, {CLASH_MODE_GLOBAL, CLASH_MODE_NO_PROXY, CLASH_MODE_RULE} from "./clash";
 import State from "./state";
 
 export default class Listener {
-  public static handlerActionStartClashService(event: IpcMainInvokeEvent) {
+  public static handlerActionStartClashService() {
     console.log("前端启动CLASH服务...")
     Clash.instance().start()
 
     return State.instance().clashState
   }
 
-  public static handlerActionStopClashService(event: IpcMainInvokeEvent) {
+  public static handlerActionStopClashService() {
     console.log("前端停止CLASH服务...")
     Clash.instance().stop()
 
     return State.instance().clashState
   }
 
-  public static handlerActionRestartClashService(event: IpcMainInvokeEvent) {
+  public static handlerActionRestartClashService() {
     console.log("前端重启CLASH服务...")
     Clash.instance().restart()
 
@@ -25,6 +25,13 @@ export default class Listener {
   }
 
   public static handlerActionSetClashProxyMode(event: IpcMainInvokeEvent, mode: string) {
+    console.log(`前端设置CLASH路由规则为: ${mode}`)
+
+    if (mode === CLASH_MODE_GLOBAL || mode === CLASH_MODE_RULE || mode === CLASH_MODE_NO_PROXY) {
+      Clash.instance().setMode(mode)
+      Clash.instance().syncConfig()
+    }
+
     return true
   }
 
@@ -40,11 +47,11 @@ export default class Listener {
     return true
   }
 
-  public static handlerQueryClashServiceState(event: IpcMainInvokeEvent) {
+  public static handlerQueryClashServiceState() {
     return State.instance().clashState
   }
 
-  public static handlerQueryClashProxyMode(event: IpcMainInvokeEvent) {
-    return "rule-mode"
+  public static handlerQueryClashProxyMode() {
+    return Clash.instance().getMode()
   }
 }

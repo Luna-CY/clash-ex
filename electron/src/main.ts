@@ -10,7 +10,9 @@ export default class Main {
   public static BrowserWindow: any;
 
   public static main(app: Electron.App, browserWindow: typeof BrowserWindow) {
+    // CLASH服务初始化
     !Clash.instance().isInstalled() && !Clash.instance().install() && app.quit()
+    !Clash.instance().loadConfig() && app.quit()
 
     // we pass the Electron.App object and the
     // Electron.BrowserWindow into this function

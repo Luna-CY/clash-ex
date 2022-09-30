@@ -1,14 +1,14 @@
 import "../../static/css/pane/Home.css"
 import {Component} from "react";
-import {Button, Notification, Select, Space, Typography} from "@douyinfe/semi-ui";
+import {Button, Checkbox, Notification, Select, Space, Typography} from "@douyinfe/semi-ui";
 
 const CLASH_STATE_NOT_RUNNING = "not-running"
 const CLASH_STATE_RUNNING = "running"
 const CLASH_STATE_ERROR = "error"
 
-const CLASH_MODE_NO_PROXY = "no-proxy-mode"
-const CLASH_MODE_GLOBAL = "global-mode"
-const CLASH_MODE_RULE = "rule-mode"
+const CLASH_MODE_NO_PROXY = "direct"
+const CLASH_MODE_GLOBAL = "global"
+const CLASH_MODE_RULE = "rule"
 
 export default class Home extends Component<any, any> {
 
@@ -81,11 +81,25 @@ export default class Home extends Component<any, any> {
                 <div><Space><Text>CLASH代理模式</Text></Space></div>
               </div>
               <div className="Header-Buttons">
-                <Select defaultValue={this.state.clash.mode} className="Proxy-Mode-Selector" onChange={this.changeProxyMode}>
+                <Select defaultValue={CLASH_MODE_RULE} value={this.state.clash.mode} className="Proxy-Mode-Selector" onChange={this.changeProxyMode}>
                   <Select.Option value={CLASH_MODE_GLOBAL}>全局模式</Select.Option>
                   <Select.Option value={CLASH_MODE_RULE}>规则模式</Select.Option>
                   <Select.Option value={CLASH_MODE_NO_PROXY}>直连模式</Select.Option>
                 </Select>
+              </div>
+            </div>
+          </div>
+          <div className="Home-Header-Group">
+            <div className="Home-Header-Line">
+              <div className="Header-Service">
+                <div><Space><Text>系统代理状态</Text></Space></div>
+              </div>
+              <div className="Header-Buttons">
+                <Space>
+                  <Checkbox>HTTP代理</Checkbox>
+                  <Checkbox>HTTPS代理</Checkbox>
+                  <Checkbox>SOCKS5代理</Checkbox>
+                </Space>
               </div>
             </div>
           </div>
