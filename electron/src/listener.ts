@@ -1,44 +1,47 @@
 import IpcMainInvokeEvent = Electron.IpcMainInvokeEvent;
+import Clash from "./clash";
+import State from "./state";
 
 export default class Listener {
   public static handlerActionStartClashService(event: IpcMainInvokeEvent) {
-    console.log(event)
-    return "running"
+    console.log("前端启动CLASH服务...")
+    Clash.instance().start()
+
+    return State.instance().clashState
   }
 
   public static handlerActionStopClashService(event: IpcMainInvokeEvent) {
-    console.log(event)
-    return "not-running"
+    console.log("前端停止CLASH服务...")
+    Clash.instance().stop()
+
+    return State.instance().clashState
   }
 
   public static handlerActionRestartClashService(event: IpcMainInvokeEvent) {
-    console.log(event)
-    return "running"
+    console.log("前端重启CLASH服务...")
+    Clash.instance().restart()
+
+    return State.instance().clashState
   }
 
   public static handlerActionSetClashProxyMode(event: IpcMainInvokeEvent, mode: string) {
-    console.log(event)
     return true
   }
 
   public static handlerActionSetClashPort(event: IpcMainInvokeEvent, mixed: boolean, port: number, http: number, socks: number) {
-    console.log(event)
     return true
   }
 
   public static handlerActionAddClashRule(event: IpcMainInvokeEvent, mode: string, value: string, proxy: string) {
-    console.log(event)
     return true
   }
 
   public static handlerActionRemoveClashRule(event: IpcMainInvokeEvent, index: number) {
-    console.log(event)
     return true
   }
 
   public static handlerQueryClashServiceState(event: IpcMainInvokeEvent) {
-    console.log(event)
-    return "not-running"
+    return State.instance().clashState
   }
 
   public static handlerQueryClashProxyMode(event: IpcMainInvokeEvent) {

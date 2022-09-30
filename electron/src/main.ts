@@ -2,6 +2,7 @@ import {BrowserWindow, ipcMain} from 'electron';
 import * as path from "path";
 import Listener from "./listener";
 import electronIsDev = require("electron-is-dev");
+import Clash from "./clash";
 
 export default class Main {
   public static mainWindow: Electron.BrowserWindow;
@@ -9,14 +10,17 @@ export default class Main {
   public static BrowserWindow: any;
 
   public static main(app: Electron.App, browserWindow: typeof BrowserWindow) {
+    !Clash.instance().isInstalled() && !Clash.instance().install() && app.quit()
+
     // we pass the Electron.App object and the
     // Electron.BrowserWindow into this function
     // so this class has no dependencies. This
     // makes the code easier to write tests for
-    Main.BrowserWindow = browserWindow;
-    Main.application = app;
-    Main.application.on('window-all-closed', Main.onWindowAllClosed);
-    Main.application.on('ready', Main.onReady);
+    Main.BrowserWindow = browserWindow
+    Main.application = app
+    Main.application.on('window-all-closed', Main.onWindowAllClosed)
+    Main.application.on('ready', Main.onReady)
+    Main.application.on("will-quit", Main.onQuit)
 
     // 注册IPC事件监听器
 
@@ -34,12 +38,16 @@ export default class Main {
 
   private static onWindowAllClosed() {
     if (process.platform !== 'darwin') {
-      Main.application.quit();
+      Main.application.quit()
     }
   }
 
   private static onClose() {
-    Main.mainWindow = null;
+    Main.mainWindow = null
+  }
+
+  private static onQuit() {
+    Clash.instance().stop()
   }
 
   private static onReady() {
@@ -58,7 +66,7 @@ export default class Main {
         preload: path.join(__dirname, "preload.js"),
         disableDialogs: true,
       }
-    });
+    })
 
     if (electronIsDev) {
       Main.mainWindow.loadURL("http://localhost:3000").catch()
@@ -66,7 +74,7 @@ export default class Main {
       Main.mainWindow.loadFile(path.join(path.dirname(__dirname), "frontend", 'index.html')).catch()
     }
 
-    Main.mainWindow.on('closed', Main.onClose);
+    Main.mainWindow.on('closed', Main.onClose)
     Main.mainWindow.webContents.openDevTools()
   }
 }

@@ -15,9 +15,23 @@ export default class Home extends Component<any, any> {
   constructor(props: any) {
     super(props);
 
-    this.state = {clash: {state: CLASH_STATE_NOT_RUNNING, mode: CLASH_MODE_NO_PROXY, detail: ""}}
-    window.capi.queryClashServiceState().then(value => this.state.clash.state = value)
-    window.capi.queryClashProxyMode().then(value => this.state.clash.mode = value)
+    this.state = {clash: {state: CLASH_STATE_NOT_RUNNING, mode: CLASH_MODE_NO_PROXY, detail: ""}, loading: {service: false}}
+
+    window.capi.queryClashServiceState().then(value => {
+      this.setState((state: any) => {
+        state.clash.state = value
+
+        return state
+      })
+    })
+
+    window.capi.queryClashProxyMode().then(value => {
+      this.setState((state: any) => {
+        state.clash.mode = value
+
+        return state
+      })
+    })
 
     this.startClashService = this.startClashService.bind(this)
     this.stopClashService = this.stopClashService.bind(this)
@@ -28,9 +42,9 @@ export default class Home extends Component<any, any> {
   render() {
     const {Text} = Typography
 
-    let start = <Button key="start-service-button" onClick={this.startClashService}>启动服务</Button>
-    let stop = <Button key="stop-service-button" onClick={this.stopClashService}>停止服务</Button>
-    let restart = <Button key="restart-service-button" onClick={this.restartClashService}>重启服务</Button>
+    let start = <Button key="start-service-button" loading={this.state.loading.service} onClick={this.startClashService}>启动服务</Button>
+    let stop = <Button key="stop-service-button" loading={this.state.loading.service} onClick={this.stopClashService}>停止服务</Button>
+    let restart = <Button key="restart-service-button" loading={this.state.loading.service} onClick={this.restartClashService}>重启服务</Button>
 
     let buttons = []
     switch (this.state.clash.state) {
@@ -81,6 +95,12 @@ export default class Home extends Component<any, any> {
   }
 
   private startClashService() {
+    this.setState((state: any) => {
+      state.loading.service = true
+
+      return state
+    })
+
     window.capi.actionStartClashService().then(value => {
       this.setState((state: any) => {
         state.clash.state = value
@@ -88,9 +108,21 @@ export default class Home extends Component<any, any> {
         return state
       })
     })
+
+    this.setState((state: any) => {
+      state.loading.service = false
+
+      return state
+    })
   }
 
   private stopClashService() {
+    this.setState((state: any) => {
+      state.loading.service = true
+
+      return state
+    })
+
     window.capi.actionStopClashService().then(value => {
       this.setState((state: any) => {
         state.clash.state = value
@@ -99,15 +131,32 @@ export default class Home extends Component<any, any> {
       })
     })
 
+    this.setState((state: any) => {
+      state.loading.service = false
+
+      return state
+    })
   }
 
   private restartClashService() {
+    this.setState((state: any) => {
+      state.loading.service = true
+
+      return state
+    })
+
     window.capi.actionRestartClashService().then(value => {
       this.setState((state: any) => {
         state.clash.state = value
 
         return state
       })
+    })
+
+    this.setState((state: any) => {
+      state.loading.service = false
+
+      return state
     })
   }
 
