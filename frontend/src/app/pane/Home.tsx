@@ -54,9 +54,9 @@ export default class Home extends Component<any, any> {
                 <div><Space><Text>CLASH服务状态</Text></Space></div>
               </div>
               <div className="Header-Buttons">
-                {CLASH_STATE_RUNNING == this.state.clash.state && <Text type="success">已启动</Text>}
-                {CLASH_STATE_NOT_RUNNING == this.state.clash.state && <Text type="quaternary">未启动</Text>}
-                {CLASH_STATE_ERROR == this.state.clash.state && <Text type="danger">启动失败</Text>}
+                {CLASH_STATE_RUNNING === this.state.clash.state && <Text type="success">已启动</Text>}
+                {CLASH_STATE_NOT_RUNNING === this.state.clash.state && <Text type="quaternary">未启动</Text>}
+                {CLASH_STATE_ERROR === this.state.clash.state && <Text type="danger">启动失败</Text>}
                 <Space>
                   {buttons}
                 </Space>
