@@ -1,0 +1,34 @@
+.App-Pane-Home {
+}
+
+.App-Pane-Home .Home-Header {
+    display: flex;
+    flex-flow: column;
+    row-gap: 2vh;
+}
+
+.App-Pane-Home .Home-Header-Group {
+    display: flex;
+    justify-content: space-between;
+    column-gap: 2vw;
+    align-items: center;
+}
+
+.App-Pane-Home .Home-Header-Line {
+    display: flex;
+    justify-content: space-between;
+    column-gap: 2vw;
+    align-items: center;
+    width: 100%;
+}
+
+.App-Pane-Home .Home-Header-Line .Header-Buttons {
+    flex-grow: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.App-Pane-Home .Home-Header .Proxy-Mode-Selector {
+    width: 100%;
+}

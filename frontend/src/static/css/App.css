@@ -1,7 +1,11 @@
 .App {
 }
 
-.App-Content .Tabs .semi-tabs-bar-line {
-  display: flex;
-  justify-content: center;
+.App .Tabs {
+    padding: 0 2vw;
+}
+
+.App .semi-tabs-bar-line {
+    display: flex;
+    justify-content: center;
 }

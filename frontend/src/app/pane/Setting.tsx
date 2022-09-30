@@ -7,7 +7,7 @@ export default class Setting extends Component<any, any> {
     super(props);
     this.state = {
       switch: {mixed: false},
-      state: {port: false},
+      modified: {port: false},
       port: {mixed: 1080, http: 1081, socks: 1082},
     }
 
@@ -15,7 +15,7 @@ export default class Setting extends Component<any, any> {
   }
 
   mixed(checked: boolean) {
-    this.setState({switch: {mixed: checked}, state: {port: true}})
+    this.setState({switch: {mixed: checked}, modified: {port: true}})
   }
 
   render() {
@@ -25,7 +25,7 @@ export default class Setting extends Component<any, any> {
     if (this.state.switch.mixed) {
       ports.push(
         <div className="Header-Item" key="mixed-port">
-          <Space><Text>混合端口</Text><InputNumber min={1} max={65535} defaultValue={this.state.port.mixed}/></Space>
+          <Space><Text>组合端口</Text><InputNumber min={1} max={65535} defaultValue={this.state.port.mixed}/></Space>
         </div>
       )
     } else {
@@ -47,7 +47,7 @@ export default class Setting extends Component<any, any> {
           <div className="Header-Content">
             <Space>
               <div className="Header-Item">
-                <Space><Text>开启混合端口</Text><Switch checked={this.state.switch.mixed} onChange={this.mixed}></Switch></Space>
+                <Space><Text>开启组合端口</Text><Switch checked={this.state.switch.mixed} onChange={this.mixed}></Switch></Space>
               </div>
               {ports}
             </Space>
