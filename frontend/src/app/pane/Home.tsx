@@ -266,8 +266,6 @@ export default class Home extends Component<any, any> {
 
             return
           }
-
-          Notification.success({content: "设置成功", showClose: false, duration: 1, position: "top"})
         })
       } else {
         ths.setState((state: any) => {
@@ -287,8 +285,6 @@ export default class Home extends Component<any, any> {
 
             return
           }
-
-          Notification.success({content: "取消成功", showClose: false, duration: 1, position: "top"})
         })
       }
     }

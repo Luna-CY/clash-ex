@@ -78,10 +78,13 @@ export default class Listener {
 
   public static handlerActionSetSystemProxy(event: IpcMainInvokeEvent, network: string, type: string, checked: boolean) {
     if (checked) {
+      console.log(`前端设置系统代理 [${network}] [${type}]`)
       let mapping: { [key: string]: number } = {"http": Clash.instance().getHttpProxyPort(), "https": Clash.instance().getHttpProxyPort(), "socks": Clash.instance().getSocksProxyPort()}
 
       return System.instance().setSystemProxy(network, type, Clash.instance().getProxyAddress(), mapping[type])
     }
+
+    console.log(`前端取消系统代理 [${network}] [${type}]`)
 
     return System.instance().unsetSystemProxy(network, type)
   }

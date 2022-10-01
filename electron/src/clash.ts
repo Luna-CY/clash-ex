@@ -14,10 +14,10 @@ export default class Clash {
   private static single = new Clash()
 
   // 可执行文件路径
-  private bin = path.join(Config.instance().root, "clash", "darwin" === process.platform || "linux" === process.platform ? "clash" : "clash.exe")
+  private bin = path.join("clash", "darwin" === process.platform || "linux" === process.platform ? "clash" : "clash.exe")
 
   // 配置路径
-  private configPath = path.join(Config.instance().config, "clash.yaml")
+  private configPath = ""
 
   // 配置字典
   private config: { [key: string]: any } = {}
@@ -29,9 +29,16 @@ export default class Clash {
     return Clash.single
   }
 
+  // 初始化
+  public initialize(): boolean {
+    this.configPath = path.join(Config.instance().config, "clash.yaml")
+
+    return true
+  }
+
   // 判断是否已安装
   public isInstalled(): boolean {
-    return fs.existsSync(this.bin)
+    return fs.existsSync(path.join(Config.instance().root, this.bin))
   }
 
   // 安装
@@ -156,6 +163,21 @@ export default class Clash {
     this.config["socks-port"] = port
   }
 
+  // 获取规则列表
+  public getRules(): string[] {
+    return this.get("rules", [])
+  }
+
+  // 添加规则
+  public addRule(type: string, value: string, proxy: string, index: number): boolean {
+    return true
+  }
+
+  // 移除策略
+  public removeRule(index: number): boolean {
+    return true
+  }
+
   // 启动
   public start(): boolean {
     if (CLASH_STATE_RUNNING === State.instance().clashState) {
@@ -168,7 +190,7 @@ export default class Clash {
       return true
     }
 
-    this.process = child_process.execFile(this.bin, ["-f", this.configPath])
+    this.process = child_process.execFile(path.join(Config.instance().root, this.bin), ["-f", this.configPath])
     State.instance().clashState = CLASH_STATE_RUNNING
     this.process.on("exit", (code, signal) => {
       if (null !== code && 0 !== code) {

@@ -1,5 +1,6 @@
 {
-  "name": "clash-ex-electron",
+  "name": "clash-ex",
+  "productName": "Clash-EX",
   "version": "0.1.0",
   "license": "MulanPSL2",
   "author": "Luna <Luna@cyl-mail.com>",

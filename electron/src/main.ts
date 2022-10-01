@@ -1,9 +1,10 @@
 import {BrowserWindow, ipcMain} from 'electron';
 import * as path from "path";
 import Listener from "./listener";
-import electronIsDev = require("electron-is-dev");
 import Clash from "./clash";
 import System from "./system";
+import Config from "./config";
+import electronIsDev = require("electron-is-dev");
 
 export default class Main {
   public static mainWindow: Electron.BrowserWindow;
@@ -11,12 +12,20 @@ export default class Main {
   public static BrowserWindow: any;
 
   public static main(app: Electron.App, browserWindow: typeof BrowserWindow) {
+    // 初始化配置组件
+    Config.instance().name = app.getName()
+    Config.instance().home = path.join(app.getPath("home"), "." + app.getName())
+    Config.instance().root = path.join(app.getPath("appData"), app.getName())
+
     // 系统组件初始化
     !System.instance().initialize() && app.quit()
 
     // CLASH服务初始化
-    !Clash.instance().isInstalled() && !Clash.instance().install() && app.quit()
+    !Clash.instance().initialize() && !Clash.instance().isInstalled() && !Clash.instance().install() && app.quit()
     !Clash.instance().loadConfig() && app.quit()
+
+    // 启用沙盒
+    app.enableSandbox()
 
     // we pass the Electron.App object and the
     // Electron.BrowserWindow into this function
@@ -25,10 +34,8 @@ export default class Main {
     Main.BrowserWindow = browserWindow
     Main.application = app
     Main.application.on('window-all-closed', Main.onWindowAllClosed)
-    Main.application.on('ready', Main.onReady)
+    Main.application.on("ready", Main.onReady)
     Main.application.on("will-quit", Main.onQuit)
-
-    // 注册IPC事件监听器
 
     // 注册IPC事件处理器
     ipcMain.handle("action-start-clash-service", Listener.handlerActionStartClashService)
@@ -58,10 +65,24 @@ export default class Main {
   }
 
   private static onQuit() {
+    console.log("前端退出应用，退出CLASH服务...")
+    // 退出CLASH服务进程
     Clash.instance().stop()
+
+    console.log("前端退出应用，清理系统代理...")
+    // 清理系统代理状态
+    System.instance().networks.map((network) => {
+      System.instance().unsetSystemProxy(network, "http")
+      System.instance().unsetSystemProxy(network, "https")
+      System.instance().unsetSystemProxy(network, "socks")
+    })
   }
 
   private static onReady() {
+    Main.application.once("activate", () => {
+      0 === Main.BrowserWindow.getAllWindows().length && Main.onReady()
+    })
+
     Main.mainWindow = new Main.BrowserWindow({
       backgroundColor: "#F9F9F9",
       width: 900,
