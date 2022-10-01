@@ -15,7 +15,11 @@ export default class Home extends Component<any, any> {
   constructor(props: any) {
     super(props);
 
-    this.state = {clash: {state: CLASH_STATE_NOT_RUNNING, mode: CLASH_MODE_NO_PROXY, detail: ""}, loading: {service: false}}
+    this.state = {
+      clash: {state: CLASH_STATE_NOT_RUNNING, mode: CLASH_MODE_NO_PROXY, detail: ""},
+      system: {networks: [], network: "", http: {}, https: {}, socks: {}},
+      loading: {service: false},
+    }
 
     window.capi.queryClashServiceState().then(value => {
       this.setState((state: any) => {
@@ -33,10 +37,44 @@ export default class Home extends Component<any, any> {
       })
     })
 
+    window.capi.querySystemNetworks().then(value => {
+      this.setState((state: any) => {
+        state.system.networks = value
+        state.system.network = value[0]
+
+        return state
+      })
+    })
+
+    window.capi.querySystemHttpProxy().then(value => {
+      this.setState((state: any) => {
+        state.system.http = value
+
+        return state
+      })
+    })
+
+    window.capi.querySystemHttpsProxy().then(value => {
+      this.setState((state: any) => {
+        state.system.https = value
+
+        return state
+      })
+    })
+
+    window.capi.querySystemSocksProxy().then(value => {
+      this.setState((state: any) => {
+        state.system.socks = value
+
+        return state
+      })
+    })
+
     this.startClashService = this.startClashService.bind(this)
     this.stopClashService = this.stopClashService.bind(this)
     this.restartClashService = this.restartClashService.bind(this)
     this.changeProxyMode = this.changeProxyMode.bind(this)
+    this.selectNetwork = this.selectNetwork.bind(this)
   }
 
   render() {
@@ -65,7 +103,7 @@ export default class Home extends Component<any, any> {
           <div className="Home-Header-Group">
             <div className="Home-Header-Line">
               <div className="Header-Service">
-                <div><Space><Text>CLASH服务状态</Text></Space></div>
+                <div><Space><Text>代理服务状态</Text></Space></div>
               </div>
               <div className="Header-Buttons">
                 {CLASH_STATE_RUNNING === this.state.clash.state && <Text type="success">已启动</Text>}
@@ -78,7 +116,7 @@ export default class Home extends Component<any, any> {
             </div>
             <div className="Home-Header-Line">
               <div className="Header-Service">
-                <div><Space><Text>CLASH代理模式</Text></Space></div>
+                <div><Space><Text>代理服务模式</Text></Space></div>
               </div>
               <div className="Header-Buttons">
                 <Select defaultValue={CLASH_MODE_RULE} value={this.state.clash.mode} className="Proxy-Mode-Selector" onChange={this.changeProxyMode}>
@@ -96,9 +134,12 @@ export default class Home extends Component<any, any> {
               </div>
               <div className="Header-Buttons">
                 <Space>
-                  <Checkbox>HTTP代理</Checkbox>
-                  <Checkbox>HTTPS代理</Checkbox>
-                  <Checkbox>SOCKS5代理</Checkbox>
+                  <Select value={this.state.system.network} onChange={this.selectNetwork}>
+                    {this.state.system.networks.map((network: string) => <Select.Option key={network} value={network}>{network}</Select.Option>)}
+                  </Select>
+                  <Checkbox checked={this.state.system.http[this.state.system.network]} onChange={this.setSystemProxy(this.state.system.network, "http")}>HTTP代理</Checkbox>
+                  <Checkbox checked={this.state.system.https[this.state.system.network]} onChange={this.setSystemProxy(this.state.system.network, "https")}>HTTPS代理</Checkbox>
+                  <Checkbox checked={this.state.system.socks[this.state.system.network]} onChange={this.setSystemProxy(this.state.system.network, "socks")}>SOCKS5代理</Checkbox>
                 </Space>
               </div>
             </div>
@@ -194,5 +235,62 @@ export default class Home extends Component<any, any> {
         Notification.error({content: "修改失败，请重试", showClose: false, duration: 1, position: "top"})
       }
     })
+  }
+
+  private selectNetwork(network: any) {
+    this.setState((state: any) => {
+      state.system.network = network
+
+      return state
+    })
+  }
+
+  private setSystemProxy(network: string, type: string) {
+    let ths = this
+    return function (event: any) {
+      if (event.target.checked) {
+        ths.setState((state: any) => {
+          state.system[type][network] = event.target.checked
+
+
+          return state
+        })
+
+        window.capi.actionSetSystemProxy(network, type, true).then(ok => {
+          if (!ok) {
+            Notification.error({content: "设置失败，请重试", showClose: false, duration: 1, position: "top"})
+
+            ths.setState((state: any) => {
+              state.system[type][network] = false
+            })
+
+            return
+          }
+
+          Notification.success({content: "设置成功", showClose: false, duration: 1, position: "top"})
+        })
+      } else {
+        ths.setState((state: any) => {
+          state.system[type][network] = event.target.checked
+
+
+          return state
+        })
+
+        window.capi.actionSetSystemProxy(network, type, false).then(ok => {
+          if (!ok) {
+            Notification.error({content: "取消失败，请重试", showClose: false, duration: 1, position: "top"})
+
+            ths.setState((state: any) => {
+              state.system[type][network] = true
+            })
+
+            return
+          }
+
+          Notification.success({content: "取消成功", showClose: false, duration: 1, position: "top"})
+        })
+      }
+    }
   }
 }

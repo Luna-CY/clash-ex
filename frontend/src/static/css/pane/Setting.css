@@ -1,7 +1,13 @@
 .App-Pane-Setting {
 }
 
-.App-Pane-Setting .Header-Content {
+.App-Pane-Setting .Setting-Header {
+    display: flex;
+    flex-flow: column;
+    row-gap: 2vh;
+}
+
+.App-Pane-Setting .Header-Group {
     display: flex;
     justify-content: space-between;
 }
@@ -9,4 +15,8 @@
 .App-Pane-Setting .Header-Item {
     display: flex;
     align-items: center;
+}
+
+.App-Pane-Setting .Header-Item .semi-input-number {
+    width: 15vw;
 }

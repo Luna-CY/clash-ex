@@ -70,12 +70,90 @@ export default class Clash {
 
   // 获取代理模式
   public getMode(): string {
-    return null !== this.config["mode"] && undefined != this.config["mode"] ? this.config["mode"] : CLASH_MODE_RULE
+    return this.get("mode", CLASH_MODE_RULE)
   }
 
   // 设置代理模式
   public setMode(mode: string) {
     this.config["mode"] = mode
+  }
+
+  // 获取代理地址
+  public getProxyAddress(): string {
+    return this.get("address", "127.0.0.1")
+  }
+
+  // 设置代理地址
+  public setProxyAddress(address: string) {
+    this.config["address"] = address
+  }
+
+  // 获取组合端口
+  public getMixedPort(): number {
+    return this.get("mixed-port", 0)
+  }
+
+  // 设置组合端口
+  public setMixedPort(port: number) {
+    if (0 === port) {
+      delete this.config["mixed-port"]
+
+      return
+    }
+
+    this.config["mixed-port"] = port
+  }
+
+  // 获取HTTP端口
+  public getHttpPort(): number {
+    return this.get("port", 0)
+  }
+
+  // 获取一个有效的用于代理HTTP请求的端口
+  // 优先获取组合端口
+  public getHttpProxyPort(): number {
+    if (0 !== this.getMixedPort()) {
+      return this.getMixedPort()
+    }
+
+    return this.getHttpPort()
+  }
+
+  // 设置HTTP端口
+  public setHttpPort(port: number) {
+    if (0 === port) {
+      delete this.config["port"]
+
+      return
+    }
+
+    this.config["port"] = port
+  }
+
+  // 获取SOCKS端口
+  public getSocksPort(): number {
+    return this.get("socks-port", 0)
+  }
+
+  // 获取一个有效的用于代理SOCKS请求的端口
+  // 优先获取组合端口
+  public getSocksProxyPort(): number {
+    if (0 !== this.getMixedPort()) {
+      return this.getMixedPort()
+    }
+
+    return this.getSocksPort()
+  }
+
+  // 设置SOCKS端口
+  public setSocksPort(port: number) {
+    if (0 === port) {
+      delete this.config["socks-port"]
+
+      return
+    }
+
+    this.config["socks-port"] = port
   }
 
   // 启动
@@ -155,6 +233,11 @@ export default class Clash {
     }
 
     return this.start()
+  }
+
+  // 获取配置属性
+  private get(key: string, def: any): any {
+    return null !== this.config[key] && undefined !== this.config[key] ? this.config[key] : def
   }
 
   // 初始化配置文件内容

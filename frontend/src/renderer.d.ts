@@ -3,11 +3,16 @@ export interface CustomApi {
   actionStopClashService: () => Promise<string>
   actionRestartClashService: () => Promise<string>
   actionSetClashProxyMode: (title: string) => Promise<boolean>
-  actionSetClashPort: (mixed: boolean, port: number, http: number, socks: number) => Promise<boolean>
+  actionSetClashPort: (mixed: number, http: number, socks: number) => Promise<boolean>
   actionAddClashRule: (mode: string, value: string, proxy: string) => Promise<boolean>
   actionRemoveClashRule: (index: number) => Promise<boolean>
+  actionSetSystemProxy: (network: string, type: string, checked: boolean) => Promise<boolean>
   queryClashServiceState: () => Promise<string>
   queryClashProxyMode: () => Promise<string>
+  querySystemNetworks: () => Promise<string[]>
+  querySystemHttpProxy: () => Promise<{ [key: string]: boolean }>
+  querySystemHttpsProxy: () => Promise<{ [key: string]: boolean }>
+  querySystemSocksProxy: () => Promise<{ [key: string]: boolean }>
 }
 
 declare global {

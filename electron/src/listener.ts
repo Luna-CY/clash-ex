@@ -1,6 +1,7 @@
 import IpcMainInvokeEvent = Electron.IpcMainInvokeEvent;
 import Clash, {CLASH_MODE_GLOBAL, CLASH_MODE_NO_PROXY, CLASH_MODE_RULE} from "./clash";
 import State from "./state";
+import System from "./system";
 
 export default class Listener {
   public static handlerActionStartClashService() {
@@ -35,8 +36,12 @@ export default class Listener {
     return true
   }
 
-  public static handlerActionSetClashPort(event: IpcMainInvokeEvent, mixed: boolean, port: number, http: number, socks: number) {
-    return true
+  public static handlerActionSetClashPort(event: IpcMainInvokeEvent, mixed: number, http: number, socks: number) {
+    Clash.instance().setMixedPort(mixed)
+    Clash.instance().setHttpPort(http)
+    Clash.instance().setSocksPort(socks)
+
+    return Clash.instance().syncConfig()
   }
 
   public static handlerActionAddClashRule(event: IpcMainInvokeEvent, mode: string, value: string, proxy: string) {
@@ -53,5 +58,31 @@ export default class Listener {
 
   public static handlerQueryClashProxyMode() {
     return Clash.instance().getMode()
+  }
+
+  public static handlerQuerySystemNetworks() {
+    return System.instance().networks
+  }
+
+  public static handlerQuerySystemHttpProxy() {
+    return System.instance().http
+  }
+
+  public static handlerQuerySystemHttpsProxy() {
+    return System.instance().https
+  }
+
+  public static handlerQuerySystemSocksProxy() {
+    return System.instance().socks
+  }
+
+  public static handlerActionSetSystemProxy(event: IpcMainInvokeEvent, network: string, type: string, checked: boolean) {
+    if (checked) {
+      let mapping: { [key: string]: number } = {"http": Clash.instance().getHttpProxyPort(), "https": Clash.instance().getHttpProxyPort(), "socks": Clash.instance().getSocksProxyPort()}
+
+      return System.instance().setSystemProxy(network, type, Clash.instance().getProxyAddress(), mapping[type])
+    }
+
+    return System.instance().unsetSystemProxy(network, type)
   }
 }

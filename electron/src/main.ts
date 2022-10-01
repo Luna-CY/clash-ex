@@ -3,6 +3,7 @@ import * as path from "path";
 import Listener from "./listener";
 import electronIsDev = require("electron-is-dev");
 import Clash from "./clash";
+import System from "./system";
 
 export default class Main {
   public static mainWindow: Electron.BrowserWindow;
@@ -10,6 +11,9 @@ export default class Main {
   public static BrowserWindow: any;
 
   public static main(app: Electron.App, browserWindow: typeof BrowserWindow) {
+    // 系统组件初始化
+    !System.instance().initialize() && app.quit()
+
     // CLASH服务初始化
     !Clash.instance().isInstalled() && !Clash.instance().install() && app.quit()
     !Clash.instance().loadConfig() && app.quit()
@@ -34,8 +38,13 @@ export default class Main {
     ipcMain.handle("action-set-clash-port", Listener.handlerActionSetClashPort)
     ipcMain.handle("action-add-clash-rule", Listener.handlerActionAddClashRule)
     ipcMain.handle("action-remove-clash-rule", Listener.handlerActionRemoveClashRule)
+    ipcMain.handle("action-system-proxy", Listener.handlerActionSetSystemProxy)
     ipcMain.handle("query-clash-service-state", Listener.handlerQueryClashServiceState)
     ipcMain.handle("query-clash-proxy-mode", Listener.handlerQueryClashProxyMode)
+    ipcMain.handle("query-system-networks", Listener.handlerQuerySystemNetworks)
+    ipcMain.handle("query-system-http-proxy", Listener.handlerQuerySystemHttpProxy)
+    ipcMain.handle("query-system-https-proxy", Listener.handlerQuerySystemHttpsProxy)
+    ipcMain.handle("query-system-socks-proxy", Listener.handlerQuerySystemSocksProxy)
   }
 
   private static onWindowAllClosed() {
