@@ -19,6 +19,12 @@ contextBridge.exposeInMainWorld("capi", {
   querySystemSocksProxy: async () => {
     return await ipcRenderer.invoke("query-system-socks-proxy")
   },
+  queryClashRules: async () => {
+    return await ipcRenderer.invoke("query-clash-rules")
+  },
+  queryClashPorts: async () => {
+    return await ipcRenderer.invoke("query-clash-ports")
+  },
   actionStartClashService: async () => {
     return await ipcRenderer.invoke("action-start-clash-service")
   },
@@ -34,8 +40,8 @@ contextBridge.exposeInMainWorld("capi", {
   actionSetClashPort: async (mixed: number, http: number, socks: number) => {
     return await ipcRenderer.invoke("action-set-clash-port", mixed, http, socks)
   },
-  actionAddClashRule: async (mode: string, value: string, proxy: string) => {
-    return await ipcRenderer.invoke("action-add-clash-rule", mode, value, proxy)
+  actionAddClashRule: async (index: number, type: string, value: string, proxy: string) => {
+    return await ipcRenderer.invoke("action-add-clash-rule", index, type, value, proxy)
   },
   actionRemoveClashRule: async (index: number) => {
     return await ipcRenderer.invoke("action-remove-clash-rule", index)

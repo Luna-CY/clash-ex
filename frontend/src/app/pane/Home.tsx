@@ -1,6 +1,7 @@
 import "../../static/css/pane/Home.css"
 import {Component} from "react";
-import {Button, Checkbox, Notification, Select, Space, Typography} from "@douyinfe/semi-ui";
+import {Button, Checkbox, Divider, Notification, Select, Space, Typography} from "@douyinfe/semi-ui";
+import Rule from "../component/Rule";
 
 const CLASH_STATE_NOT_RUNNING = "not-running"
 const CLASH_STATE_RUNNING = "running"
@@ -18,6 +19,7 @@ export default class Home extends Component<any, any> {
     this.state = {
       clash: {state: CLASH_STATE_NOT_RUNNING, mode: CLASH_MODE_NO_PROXY, detail: ""},
       system: {networks: [], network: "", http: {}, https: {}, socks: {}},
+      style: {mode: "warning"},
       loading: {service: false},
     }
 
@@ -32,6 +34,7 @@ export default class Home extends Component<any, any> {
     window.capi.queryClashProxyMode().then(value => {
       this.setState((state: any) => {
         state.clash.mode = value
+        state.style.mode = {CLASH_MODE_GLOBAL: "error", CLASH_MODE_RULE: "warning", CLASH_MODE_NO_PROXY: "default"}[value]
 
         return state
       })
@@ -81,8 +84,8 @@ export default class Home extends Component<any, any> {
     const {Text} = Typography
 
     let start = <Button key="start-service-button" loading={this.state.loading.service} onClick={this.startClashService}>启动服务</Button>
-    let stop = <Button key="stop-service-button" loading={this.state.loading.service} onClick={this.stopClashService}>停止服务</Button>
-    let restart = <Button key="restart-service-button" loading={this.state.loading.service} onClick={this.restartClashService}>重启服务</Button>
+    let stop = <Button key="stop-service-button" type={"danger"} loading={this.state.loading.service} onClick={this.stopClashService}>停止服务</Button>
+    let restart = <Button key="restart-service-button" type={"warning"} loading={this.state.loading.service} onClick={this.restartClashService}>重启服务</Button>
 
     let buttons = []
     switch (this.state.clash.state) {
@@ -119,7 +122,7 @@ export default class Home extends Component<any, any> {
                 <div><Space><Text>代理服务模式</Text></Space></div>
               </div>
               <div className="Header-Buttons">
-                <Select defaultValue={CLASH_MODE_RULE} value={this.state.clash.mode} className="Proxy-Mode-Selector" onChange={this.changeProxyMode}>
+                <Select defaultValue={CLASH_MODE_RULE} value={this.state.clash.mode} validateStatus={this.state.style.mode} className="Proxy-Mode-Selector" onChange={this.changeProxyMode}>
                   <Select.Option value={CLASH_MODE_GLOBAL}>全局模式</Select.Option>
                   <Select.Option value={CLASH_MODE_RULE}>规则模式</Select.Option>
                   <Select.Option value={CLASH_MODE_NO_PROXY}>直连模式</Select.Option>
@@ -144,6 +147,10 @@ export default class Home extends Component<any, any> {
               </div>
             </div>
           </div>
+        </div>
+        <div className={"Home-Content"}>
+          <Divider align={"center"}>规则列表</Divider>
+          <Rule/>
         </div>
       </div>
     )

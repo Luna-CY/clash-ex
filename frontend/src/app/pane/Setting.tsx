@@ -12,6 +12,10 @@ export default class Setting extends Component<any, any> {
       port: {mixed: 1080, http: 1081, socks: 1082},
     }
 
+    window.capi.queryClashPorts().then(value => {
+      this.setState({port: value})
+    })
+
     this.changePort = this.changePort.bind(this)
     this.savePort = this.savePort.bind(this)
   }

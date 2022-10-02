@@ -4,6 +4,8 @@ import * as path from "path";
 import * as child_process from "child_process"
 import * as yaml from "yaml"
 import Config from "./config";
+import {v4 as uuidv4} from "uuid";
+import axios from "axios";
 
 export const CLASH_MODE_GLOBAL = "global"
 export const CLASH_MODE_RULE = "rule"
@@ -32,6 +34,13 @@ export default class Clash {
   // 初始化
   public initialize(): boolean {
     this.configPath = path.join(Config.instance().config, "clash.yaml")
+    if (fs.existsSync(this.configPath)) {
+      if (!fs.mkdirSync(path.dirname(this.configPath), {recursive: true})) {
+        return false
+      }
+
+      this.initConfigContent()
+    }
 
     return true
   }
@@ -52,12 +61,6 @@ export default class Clash {
 
   // 加载配置文件
   public loadConfig(): boolean {
-    if (!fs.existsSync(this.configPath)) {
-      this.initConfigContent()
-
-      return true
-    }
-
     this.config = yaml.parse(fs.readFileSync(this.configPath, "utf-8").toString())
     if (null == this.config) {
       this.initConfigContent()
@@ -71,6 +74,10 @@ export default class Clash {
   public syncConfig(): boolean {
     let content = yaml.stringify(this.config)
     fs.writeFileSync(this.configPath, content)
+
+    // 通知CLASH重载配置文件
+    let url = "http://" + this.get("external-controller", "127.0.0.1:33355") + "/configs";
+    axios.put(url, this.config, {headers: {"Content-Type": "application/json", Authorization: "Bearer " + this.get("secret", "")}}).catch()
 
     return true
   }
@@ -92,7 +99,7 @@ export default class Clash {
 
   // 设置代理地址
   public setProxyAddress(address: string) {
-    this.config["address"] = address
+    this.config["bind-address"] = address
   }
 
   // 获取组合端口
@@ -163,19 +170,61 @@ export default class Clash {
     this.config["socks-port"] = port
   }
 
-  // 获取规则列表
-  public getRules(): string[] {
-    return this.get("rules", [])
+  // 获取解析的规则列表
+  public getRules(): { [key: string]: string }[] {
+    let ret: { [key: string]: string }[] = []
+    let rules = this.get("rules", [])
+    if (0 !== rules.length) {
+      rules.map((rule: string) => {
+        let tokens = rule.split(",")
+        // MATCH规则不需要加进去
+        if (2 === tokens.length && "MATCH" === tokens[0]) {
+          return
+        }
+
+        ret.push({"type": tokens[0], "value": tokens[1], "proxy": tokens[2]})
+
+        return rule
+      })
+    }
+
+    return ret
   }
 
   // 添加规则
-  public addRule(type: string, value: string, proxy: string, index: number): boolean {
+  public addRule(index: number, type: string, value: string, proxy: string): boolean {
+    let rules: string[] = this.get("rules", [])
+    rules.splice(index, 0, [type, value, proxy].join(","))
+    this.config["rules"] = rules
+
+    if (!this.syncConfig()) {
+      return false
+    }
+
     return true
   }
 
-  // 移除策略
+  // 移除规则
   public removeRule(index: number): boolean {
+    let rules: string[] = this.get("rules", [])
+    rules.splice(index, 1)
+    this.config["rules"] = rules
+
+    if (!this.syncConfig()) {
+      return false
+    }
+
     return true
+  }
+
+  // 获取开启的端口号
+  public getPorts(): { [key: string]: string } {
+    let ports: { [key: string]: string } = {}
+    ports["mixed"] = this.get("mixed-port", 0)
+    ports["http"] = this.get("port", 0)
+    ports["socks"] = this.get("socks-port", 0)
+
+    return ports
   }
 
   // 启动
@@ -265,13 +314,15 @@ export default class Clash {
   // 初始化配置文件内容
   private initConfigContent() {
     this.config = {
-      "mixed-port": 1080,
-      "port": 1081,
-      "socks-port": 1082,
       "bind-address": "127.0.0.1",
+      "mixed-port": 1080,
       "mode": CLASH_MODE_RULE,
       "log-level": "error",
       "external-controller": "127.0.0.1:33355",
+      "secret": uuidv4(),
+      "allow-lan": false,
     }
+
+    this.syncConfig()
   }
 }

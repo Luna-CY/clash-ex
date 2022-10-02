@@ -48,6 +48,8 @@ export default class Main {
     ipcMain.handle("action-system-proxy", Listener.handlerActionSetSystemProxy)
     ipcMain.handle("query-clash-service-state", Listener.handlerQueryClashServiceState)
     ipcMain.handle("query-clash-proxy-mode", Listener.handlerQueryClashProxyMode)
+    ipcMain.handle("query-clash-rules", Listener.handlerQueryClashRules)
+    ipcMain.handle("query-clash-ports", Listener.handlerQueryClashPorts)
     ipcMain.handle("query-system-networks", Listener.handlerQuerySystemNetworks)
     ipcMain.handle("query-system-http-proxy", Listener.handlerQuerySystemHttpProxy)
     ipcMain.handle("query-system-https-proxy", Listener.handlerQuerySystemHttpsProxy)
@@ -75,6 +77,8 @@ export default class Main {
       System.instance().unsetSystemProxy(network, "http")
       System.instance().unsetSystemProxy(network, "https")
       System.instance().unsetSystemProxy(network, "socks")
+
+      return network
     })
   }
 

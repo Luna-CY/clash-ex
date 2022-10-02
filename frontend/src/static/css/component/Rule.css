@@ -1,0 +1,34 @@
+.Rule-Component {
+}
+
+.Rule-Component .Buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.Rule-Component .Rule-List {
+    margin-top: 2vh;
+    height: 60vh;
+    overflow: auto;
+    padding-right: 1vw;
+}
+
+.Rule-Component .Rule-List .semi-list-item {
+    padding: 12px 0;
+}
+
+.Rule-Component .Rule-List .semi-list-item-body-main {
+    width: 100%;
+}
+
+.Rule-Component .Rule-Item-Edit {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    column-gap: 2vw;
+}
+
+.Rule-Component .Rule-Item-Edit .Edit-Value {
+    flex-grow: 1;
+}

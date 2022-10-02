@@ -32,3 +32,7 @@
 .App-Pane-Home .Home-Header .Proxy-Mode-Selector {
     width: 100%;
 }
+
+.App-Pane-Home .Home-Content {
+    margin-top: 2vh;
+}
