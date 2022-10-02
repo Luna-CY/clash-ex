@@ -107,11 +107,11 @@ export default class Main {
 
     if (electronIsDev) {
       Main.mainWindow.loadURL("http://localhost:3000").catch()
+      Main.mainWindow.webContents.openDevTools()
     } else {
       Main.mainWindow.loadFile(path.join(path.dirname(__dirname), "frontend", 'index.html')).catch()
     }
 
     Main.mainWindow.on('closed', Main.onClose)
-    Main.mainWindow.webContents.openDevTools()
   }
 }

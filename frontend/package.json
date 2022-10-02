@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "license": "MulanPSL2",
   "author": "Luna <Luna@cyl-mail.com>",
+  "homepage": ".",
   "dependencies": {
     "@douyinfe/semi-icons": "^2.20.3",
     "@douyinfe/semi-ui": "^2.20.3",
@@ -23,7 +24,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "rm -rf ../electron/dist/frontend && mkdir -p ../electron/dist/frontend && react-scripts build && mv build/* ../electron/dist/frontend/",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

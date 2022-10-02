@@ -56,6 +56,8 @@ export default class Connection extends Component<any, any> {
 
           return state
         })
+
+        return item
       })
     })
   }
