@@ -1,6 +1,6 @@
 # clash-ex
 
-Clash的客户端，本项目基于`Electron`与`React`开发，开放全部源码，当前仅实现了与`Clash`通信的部分主要功能，还在持续开发，欢迎尝鲜，欢迎提交pr
+[`Clash`](https://github.com/Dreamacro/clash)的客户端，本项目基于`Electron`与`React`开发，开放全部源码，当前仅实现了与`Clash`通信的部分主要功能，还在持续开发，欢迎尝鲜，欢迎提交pr
 
 # 本地编译
 
