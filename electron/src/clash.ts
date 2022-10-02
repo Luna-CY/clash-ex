@@ -220,11 +220,25 @@ export default class Clash {
   // 获取开启的端口号
   public getPorts(): { [key: string]: string } {
     let ports: { [key: string]: string } = {}
+
     ports["mixed"] = this.get("mixed-port", 0)
     ports["http"] = this.get("port", 0)
     ports["socks"] = this.get("socks-port", 0)
 
     return ports
+  }
+
+  public async getConnections(): Promise<{ [key: string]: any }> {
+    let connections: { [key: string]: any } = {}
+
+    if (CLASH_STATE_RUNNING === State.instance().clashState) {
+      let url = "http://" + this.get("external-controller", "127.0.0.1:33355") + "/connections";
+      await axios.get(url, {headers: {"Content-Type": "application/json", Authorization: "Bearer " + this.get("secret", "")}}).then(res => res.data).then(json => {
+        connections = json
+      }).catch()
+    }
+
+    return connections
   }
 
   // 启动

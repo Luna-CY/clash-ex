@@ -25,6 +25,9 @@ contextBridge.exposeInMainWorld("capi", {
   queryClashPorts: async () => {
     return await ipcRenderer.invoke("query-clash-ports")
   },
+  queryClashConnections: async () => {
+    return await ipcRenderer.invoke("query-clash-connections")
+  },
   actionStartClashService: async () => {
     return await ipcRenderer.invoke("action-start-clash-service")
   },

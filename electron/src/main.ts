@@ -50,6 +50,7 @@ export default class Main {
     ipcMain.handle("query-clash-proxy-mode", Listener.handlerQueryClashProxyMode)
     ipcMain.handle("query-clash-rules", Listener.handlerQueryClashRules)
     ipcMain.handle("query-clash-ports", Listener.handlerQueryClashPorts)
+    ipcMain.handle("query-clash-connections", Listener.handlerQueryClashConnections)
     ipcMain.handle("query-system-networks", Listener.handlerQuerySystemNetworks)
     ipcMain.handle("query-system-http-proxy", Listener.handlerQuerySystemHttpProxy)
     ipcMain.handle("query-system-https-proxy", Listener.handlerQuerySystemHttpsProxy)

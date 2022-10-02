@@ -1,0 +1,5 @@
+.App-Pane-Connection {}
+
+.App-Pane-Connection .Connection-List .semi-list-item {
+    padding: 12px 0;
+}
