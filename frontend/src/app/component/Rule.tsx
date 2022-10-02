@@ -13,7 +13,7 @@ export default class Rule extends Component<any, any> {
     let rules: { [key: string]: any } = {}
     let keys: string[] = []
     let data: string[] = []
-    this.state = {keys: keys, rules: rules, data: data, scroll: {page: 0, pages: 0, more: false}}
+    this.state = {keys: keys, rules: rules, data: data, scroll: {page: 0, pages: 0, more: false}, is: null}
 
     // 拉取规则列表
     this.refresh()
@@ -27,6 +27,7 @@ export default class Rule extends Component<any, any> {
     this.remove = this.remove.bind(this)
     this.refresh = this.refresh.bind(this)
     this.fetch = this.fetch.bind(this)
+    this.bindIS = this.bindIS.bind(this)
   }
 
   render() {
@@ -37,12 +38,16 @@ export default class Rule extends Component<any, any> {
           <Button onClick={this.add}>添加</Button>
         </div>
         <div className={"Rule-List"}>
-          <InfiniteScroll useWindow={false} pageStart={0} threshold={20} hasMore={this.state.scroll.more} loadMore={this.fetch}>
+          <InfiniteScroll ref={this.bindIS} initialLoad={false} useWindow={false} pageStart={1} threshold={20} hasMore={this.state.scroll.more} loadMore={this.fetch}>
             <List dataSource={this.state.data} renderItem={this.renderLine}/>
           </InfiniteScroll>
         </div>
       </div>
     );
+  }
+
+  private bindIS(is: any) {
+    this.setState({is: is})
   }
 
   private fetch(page: number) {
@@ -272,6 +277,7 @@ export default class Rule extends Component<any, any> {
     window.capi.queryClashRules().then(value => {
       let rules: { [key: string]: any } = {}
       let keys: string[] = []
+      let data: string[] = []
 
       value.map(item => {
         let row: { [key: string]: any } = {}
@@ -286,7 +292,14 @@ export default class Rule extends Component<any, any> {
         return item
       })
 
-      this.setState({rules: rules, keys: keys, data: [], scroll: {page: 0, pages: Math.ceil(keys.length / PAGE_SIZE), more: 0 < value.length}})
+      keys.slice(0, PAGE_SIZE).map((key: string) => {
+        data.push(key)
+
+        return key
+      })
+
+      this.state.is.pageLoaded = 1
+      this.setState({rules: rules, keys: keys, data: data, scroll: {page: 1, pages: Math.ceil(keys.length / PAGE_SIZE), more: 0 < value.length}})
     })
   }
 }

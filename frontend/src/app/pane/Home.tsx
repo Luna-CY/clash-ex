@@ -80,6 +80,14 @@ export default class Home extends Component<any, any> {
     this.selectNetwork = this.selectNetwork.bind(this)
   }
 
+  componentDidMount() {
+  }
+
+  componentDidUpdate(prevProps: Readonly<any>, prevState: Readonly<any>, snapshot?: any) {
+    if ("home" === this.props.tab && "home" !== prevProps.tab) {
+    }
+  }
+
   render() {
     const {Text} = Typography
 

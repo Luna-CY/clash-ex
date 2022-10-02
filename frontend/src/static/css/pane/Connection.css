@@ -1,5 +1,36 @@
-.App-Pane-Connection {}
+.App-Pane-Connection {
+}
 
 .App-Pane-Connection .Connection-List .semi-list-item {
     padding: 12px 0;
+}
+
+.Connection-Add-Rule-Modal .semi-modal-small {
+    width: 50vw;
+}
+
+.Connection-Add-Rule-Modal .Rows {
+    display: flex;
+    flex-flow: column;
+    row-gap: 2vh;
+}
+
+.Connection-Add-Rule-Modal .Row {
+    display: flex;
+    justify-content: space-between;
+    column-gap: 2vw;
+    align-items: center;
+}
+
+.Connection-Add-Rule-Modal .Row .semi-select {
+    flex-grow: 1;
+}
+
+.Connection-Add-Rule-Modal .Row .semi-input-wrapper {
+    width: unset;
+    flex-grow: 1;
+}
+
+.Connection-Add-Rule-Modal .semi-modal-small .semi-modal-body-wrapper {
+    height: 20vh;
 }

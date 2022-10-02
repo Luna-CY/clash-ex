@@ -9,15 +9,28 @@ export default class Setting extends Component<any, any> {
     this.state = {
       switch: {mixed: false},
       modified: {port: false},
-      port: {mixed: 1080, http: 1081, socks: 1082},
+      port: {mixed: 1080, http: 0, socks: 0},
     }
-
-    window.capi.queryClashPorts().then(value => {
-      this.setState({port: value})
-    })
 
     this.changePort = this.changePort.bind(this)
     this.savePort = this.savePort.bind(this)
+    this.refresh = this.refresh.bind(this)
+  }
+
+  componentDidMount() {
+    this.refresh()
+  }
+
+  componentDidUpdate(prevProps: Readonly<any>, prevState: Readonly<any>, snapshot?: any) {
+    if ("setting" === this.props.tab && "setting" !== prevProps.tab) {
+      this.refresh()
+    }
+  }
+
+  private refresh() {
+    window.capi.queryClashPorts().then(value => {
+      this.setState({port: value})
+    })
   }
 
   render() {
