@@ -241,6 +241,17 @@ export default class Clash {
     return connections
   }
 
+  // 获取策略组列表
+  public getProxyGroups(): { [key: string]: any }[] {
+    return this.get("proxy-groups", [])
+  }
+
+  // 新增或编辑策略组，当名称已存在时编辑
+  public setProxyGroups(name: string, type: string, proxies: string[], options: { [key: string]: any }): boolean {
+    console.log(name, type, proxies, options)
+    return this.syncConfig()
+  }
+
   // 启动
   public start(): boolean {
     if (CLASH_STATE_RUNNING === State.instance().clashState) {

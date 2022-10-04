@@ -12,6 +12,7 @@ export interface CustomApi {
   queryClashRules: () => Promise<{ [key: string]: string }[]>
   queryClashPorts: () => Promise<{ [key: string]: string }>
   queryClashConnections: () => Promise<{ [key: string]: any }>
+  queryClashProxyGroups: () => Promise<{ [key: string]: any }[]>
   querySystemNetworks: () => Promise<string[]>
   querySystemHttpProxy: () => Promise<{ [key: string]: boolean }>
   querySystemHttpsProxy: () => Promise<{ [key: string]: boolean }>

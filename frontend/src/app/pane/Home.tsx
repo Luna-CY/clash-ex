@@ -23,6 +23,14 @@ export default class Home extends Component<any, any> {
       loading: {service: false},
     }
 
+    this.startClashService = this.startClashService.bind(this)
+    this.stopClashService = this.stopClashService.bind(this)
+    this.restartClashService = this.restartClashService.bind(this)
+    this.changeProxyMode = this.changeProxyMode.bind(this)
+    this.selectNetwork = this.selectNetwork.bind(this)
+  }
+
+  componentDidMount() {
     window.capi.queryClashServiceState().then(value => {
       this.setState((state: any) => {
         state.clash.state = value
@@ -72,15 +80,6 @@ export default class Home extends Component<any, any> {
         return state
       })
     })
-
-    this.startClashService = this.startClashService.bind(this)
-    this.stopClashService = this.stopClashService.bind(this)
-    this.restartClashService = this.restartClashService.bind(this)
-    this.changeProxyMode = this.changeProxyMode.bind(this)
-    this.selectNetwork = this.selectNetwork.bind(this)
-  }
-
-  componentDidMount() {
   }
 
   componentDidUpdate(prevProps: Readonly<any>, prevState: Readonly<any>, snapshot?: any) {

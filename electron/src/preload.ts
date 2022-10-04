@@ -28,6 +28,12 @@ contextBridge.exposeInMainWorld("capi", {
   queryClashConnections: async () => {
     return await ipcRenderer.invoke("query-clash-connections")
   },
+  queryClashProxyGroups: async () => {
+    return await ipcRenderer.invoke("query-clash-proxy-groups")
+  },
+  QueryClashProxies: async () => {
+    return await ipcRenderer.invoke("query-clash-proxies")
+  },
   actionStartClashService: async () => {
     return await ipcRenderer.invoke("action-start-clash-service")
   },

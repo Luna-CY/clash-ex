@@ -56,6 +56,10 @@ export default class Listener {
     return Clash.instance().getConnections()
   }
 
+  public static handlerQueryClashProxyGroups(): { [key: string]: any }[] {
+    return Clash.instance().getProxyGroups()
+  }
+
   public static handlerActionAddClashRule(event: IpcMainInvokeEvent, index: number, type: string, value: string, proxy: string) {
     console.log("前端添加规则:", index, type, value, proxy)
 

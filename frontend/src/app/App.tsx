@@ -4,7 +4,8 @@ import {TabPane, Tabs} from "@douyinfe/semi-ui";
 import Setting from "./pane/Setting";
 import Home from "./pane/Home";
 import Connection from "./pane/Connection";
-import Proxy from "./pane/Proxy";
+import Group from "./pane/Group";
+import Server from "./pane/Server";
 
 export default class App extends Component<any, any> {
   constructor(props: any) {
@@ -22,7 +23,8 @@ export default class App extends Component<any, any> {
         <div className="App-Content">
           <Tabs className="Tabs" lazyRender={true} tabPaneMotion={false} onChange={this.changeTab}>
             <TabPane itemKey="home" tab="首页"><Home tab={this.state.tab}/></TabPane>
-            <TabPane itemKey="proxy" tab="代理"><Proxy tab={this.state.tab}/></TabPane>
+            <TabPane itemKey="group" tab="策略组"><Group tab={this.state.tab}/></TabPane>
+            <TabPane itemKey="server" tab="服务器"><Server tab={this.state.tab}/></TabPane>
             <TabPane itemKey="connection" tab="连接"><Connection tab={this.state.tab}/></TabPane>
             <TabPane itemKey="setting" tab="设置"><Setting tab={this.state.tab}/></TabPane>
           </Tabs>
