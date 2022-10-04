@@ -85,9 +85,11 @@ export default class Main {
   }
 
   private static onReady() {
-    Main.application.once("activate", () => {
-      0 === Main.BrowserWindow.getAllWindows().length && Main.onReady()
-    })
+    if (0 === Main.application.listenerCount("activate")) {
+      Main.application.on("activate", () => {
+        0 === Main.BrowserWindow.getAllWindows().length && Main.onReady()
+      })
+    }
 
     Main.mainWindow = new Main.BrowserWindow({
       backgroundColor: "#F9F9F9",
