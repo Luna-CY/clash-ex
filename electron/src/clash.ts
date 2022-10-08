@@ -6,6 +6,7 @@ import * as yaml from "yaml"
 import Config from "./config";
 import {v4 as uuidv4} from "uuid";
 import axios from "axios";
+import * as zlib from "zlib"
 
 export const CLASH_MODE_GLOBAL = "global"
 export const CLASH_MODE_RULE = "rule"
@@ -34,7 +35,7 @@ export default class Clash {
   // 初始化
   public initialize(): boolean {
     this.configPath = path.join(Config.instance().config, "clash.yaml")
-    if (fs.existsSync(this.configPath)) {
+    if (!fs.existsSync(this.configPath)) {
       if (!fs.mkdirSync(path.dirname(this.configPath), {recursive: true})) {
         return false
       }
